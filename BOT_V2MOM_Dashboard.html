@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOT V2MOM · AI-Native Dashboard · FY2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0d0f12;
+    --bg2:      #13161b;
+    --bg3:      #1a1e26;
+    --bg4:      #21262f;
+    --border:   rgba(255,255,255,0.07);
+    --border2:  rgba(255,255,255,0.12);
+    --text:     #e8eaf0;
+    --text2:    #8b909e;
+    --text3:    #555c6e;
+    --accent:   #4f8cff;
+    --accent2:  #2563eb;
+    --green:    #22c55e;
+    --green-bg: rgba(34,197,94,0.10);
+    --amber:    #f59e0b;
+    --amber-bg: rgba(245,158,11,0.10);
+    --red:      #ef4444;
+    --red-bg:   rgba(239,68,68,0.10);
+    --purple:   #a78bfa;
+    --purple-bg:rgba(167,139,250,0.10);
+    --teal:     #2dd4bf;
+    --teal-bg:  rgba(45,212,191,0.10);
+    --radius:   10px;
+    --radius-lg:14px;
+    --sidebar-w:220px;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .sidebar-logo {
+    padding: 22px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-mark {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 600; color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .logo-text { line-height: 1.2; }
+  .logo-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .logo-sub   { font-size: 11px; color: var(--text3); letter-spacing: 0.03em; }
+
+  .nav-section { padding: 12px 10px; flex: 1; overflow-y: auto; }
+  .nav-group-label {
+    font-size: 10px; font-weight: 500; color: var(--text3);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 10px 10px 6px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: var(--radius);
+    font-size: 13px; color: var(--text2);
+    cursor: pointer; transition: all 0.15s; user-select: none;
+    margin-bottom: 1px;
+  }
+  .nav-item:hover { background: var(--bg3); color: var(--text); }
+  .nav-item.active { background: var(--bg3); color: var(--text); font-weight: 500; }
+  .nav-item.active .nav-icon { color: var(--accent); }
+  .nav-icon { width: 16px; text-align: center; font-size: 15px; flex-shrink: 0; }
+  .nav-badge {
+    margin-left: auto; font-size: 10px; padding: 1px 6px;
+    border-radius: 8px; background: var(--red-bg); color: var(--red);
+    font-weight: 500;
+  }
+
+  .sidebar-user {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; flex-shrink: 0;
+    background: var(--accent2); color: #fff;
+  }
+  .user-info .name { font-size: 12px; font-weight: 500; color: var(--text); }
+  .user-info .role { font-size: 11px; color: var(--text3); }
+  .cycle-pill {
+    margin-left: auto; font-size: 10px; padding: 3px 8px;
+    border-radius: 20px; background: var(--green-bg);
+    color: var(--green); font-weight: 500; border: 1px solid rgba(34,197,94,0.2);
+    white-space: nowrap;
+  }
+
+  /* ── Main ── */
+  .main {
+    flex: 1; display: flex; flex-direction: column;
+    overflow: hidden; background: var(--bg);
+  }
+
+  .topbar {
+    height: 56px; padding: 0 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg); flex-shrink: 0;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .topbar-title { font-size: 15px; font-weight: 600; color: var(--text); }
+  .topbar-meta  { font-size: 12px; color: var(--text3); }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .btn {
+    padding: 7px 14px; border-radius: var(--radius);
+    font-size: 12px; font-family: var(--font); font-weight: 500;
+    cursor: pointer; transition: all 0.15s; border: 1px solid var(--border2);
+    background: var(--bg3); color: var(--text2);
+  }
+  .btn:hover { background: var(--bg4); color: var(--text); }
+  .btn-primary {
+    background: var(--accent); color: #fff; border-color: transparent;
+  }
+  .btn-primary:hover { background: #3b7de8; }
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+  .content { flex: 1; overflow-y: auto; padding: 24px 28px; }
+
+  /* ── Panels ── */
+  .panel { display: none; animation: fadeIn 0.2s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+
+  /* ── Metric cards ── */
+  .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .metric-row-4 { grid-template-columns: repeat(4, 1fr); }
+  .metric-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 16px 18px;
+  }
+  .metric-label { font-size: 11px; color: var(--text3); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }
+  .metric-value { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; margin-bottom: 4px; }
+  .metric-sub   { font-size: 11px; color: var(--text3); }
+  .metric-card.good .metric-value { color: var(--green); }
+  .metric-card.warn .metric-value { color: var(--amber); }
+  .metric-card.bad  .metric-value { color: var(--red); }
+
+  /* ── Section label ── */
+  .sec-label {
+    font-size: 10px; font-weight: 600; color: var(--text3);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 12px; margin-top: 4px;
+  }
+
+  /* ── AI Banner ── */
+  .ai-banner {
+    background: var(--purple-bg); border: 1px solid rgba(167,139,250,0.2);
+    border-radius: var(--radius); padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+  }
+  .ai-banner-icon { font-size: 16px; flex-shrink: 0; }
+  .ai-banner-text { font-size: 13px; color: var(--purple); flex: 1; line-height: 1.4; }
+  .ai-banner .btn-sm { background: var(--purple-bg); color: var(--purple); border-color: rgba(167,139,250,0.3); }
+  .ai-banner .btn-sm:hover { background: rgba(167,139,250,0.2); }
+
+  .ai-nudge {
+    background: var(--amber-bg); border: 1px solid rgba(245,158,11,0.2);
+    border-radius: var(--radius); padding: 11px 14px; margin-bottom: 10px;
+    display: flex; gap: 10px; align-items: flex-start; font-size: 12px; color: var(--amber);
+    line-height: 1.5;
+  }
+  .ai-risk {
+    background: var(--red-bg); border: 1px solid rgba(239,68,68,0.2);
+    border-radius: var(--radius); padding: 11px 14px; margin-bottom: 10px;
+    display: flex; gap: 10px; align-items: flex-start; font-size: 12px; color: var(--red);
+    line-height: 1.5;
+  }
+
+  /* ── V2MOM card ── */
+  .v2mom-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 18px;
+  }
+  .v2mom-row {
+    display: flex; border-bottom: 1px solid var(--border);
+  }
+  .v2mom-row:last-child { border-bottom: none; }
+  .v2mom-key {
+    width: 120px; padding: 14px 16px;
+    font-size: 11px; font-weight: 600; color: var(--text3);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    background: var(--bg3); border-right: 1px solid var(--border);
+    flex-shrink: 0; display: flex; align-items: flex-start; padding-top: 16px;
+  }
+  .v2mom-val {
+    flex: 1; padding: 14px 16px;
+    font-size: 13px; color: var(--text); line-height: 1.6;
+  }
+  .v2mom-val textarea {
+    width: 100%; border: none; background: transparent;
+    font-family: var(--font); font-size: 13px; color: var(--text);
+    resize: none; outline: none; line-height: 1.6;
+  }
+  .v2mom-val textarea:focus { outline: none; }
+
+  /* ── Method items ── */
+  .method-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-bottom: 8px; font-size: 13px;
+  }
+  .method-item:last-child { margin-bottom: 0; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .dot-g { background: var(--green); }
+  .dot-a { background: var(--amber); }
+  .dot-r { background: var(--red); }
+
+  /* ── Pills ── */
+  .pill {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 3px 8px; border-radius: 20px; letter-spacing: 0.02em;
+  }
+  .pill-g  { background: var(--green-bg);  color: var(--green); }
+  .pill-a  { background: var(--amber-bg);  color: var(--amber); }
+  .pill-r  { background: var(--red-bg);    color: var(--red); }
+  .pill-b  { background: rgba(79,140,255,0.12); color: var(--accent); }
+  .pill-p  { background: var(--purple-bg); color: var(--purple); }
+  .pill-t  { background: var(--teal-bg);   color: var(--teal); }
+
+  /* ── Progress ── */
+  .prog-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 18px; }
+  .prog-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .prog-row:last-child { margin-bottom: 0; }
+  .prog-label { font-size: 12px; color: var(--text2); width: 220px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .prog-bar-bg { flex: 1; height: 6px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+  .prog-bar { height: 100%; border-radius: 3px; transition: width 0.4s; }
+  .prog-pct { font-size: 12px; font-weight: 500; color: var(--text); width: 34px; text-align: right; font-family: var(--mono); }
+  .prog-status { width: 68px; text-align: right; }
+
+  /* ── Obstacle items ── */
+  .obstacle-item {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px;
+  }
+  .obs-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+  .obs-title { font-size: 13px; font-weight: 500; color: var(--text); }
+  .obs-meta  { font-size: 11px; color: var(--text3); line-height: 1.6; }
+
+  /* ── Team cards ── */
+  .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .team-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 14px 16px;
+    cursor: pointer; transition: border-color 0.15s;
+  }
+  .team-card:hover { border-color: var(--border2); }
+  .team-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .team-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .team-role { font-size: 11px; color: var(--text3); }
+  .team-metrics { display: flex; gap: 16px; }
+  .team-metric { font-size: 11px; color: var(--text3); }
+  .team-metric strong { color: var(--text); font-size: 14px; font-weight: 600; display: block; }
+
+  /* ── Agenda ── */
+  .agenda-list { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; }
+  .agenda-item { display: flex; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .agenda-item:last-child { border-bottom: none; }
+  .agenda-num { font-size: 11px; font-weight: 600; color: var(--text3); font-family: var(--mono); padding-top: 2px; width: 18px; flex-shrink: 0; }
+  .agenda-text { font-size: 13px; color: var(--text2); line-height: 1.55; flex: 1; }
+  .agenda-text strong { color: var(--text); font-weight: 500; }
+
+  /* ── Co-writer ── */
+  .composer {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 18px;
+  }
+  .composer-head {
+    padding: 12px 18px; background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px; font-weight: 500; color: var(--text2);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .composer-head span { color: var(--purple); font-size: 14px; }
+  .composer-body { padding: 18px; }
+  textarea.composer-input {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 12px 14px;
+    font-family: var(--font); font-size: 13px; color: var(--text);
+    resize: none; outline: none; line-height: 1.6;
+    transition: border-color 0.15s;
+  }
+  textarea.composer-input:focus { border-color: var(--accent); }
+  textarea.composer-input::placeholder { color: var(--text3); }
+  .composer-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+  .spinner-text { font-size: 12px; color: var(--purple); display: none; }
+  .spinner-text.show { display: block; }
+  .ai-result {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px; margin-top: 14px;
+    display: none; font-size: 13px; line-height: 1.7;
+  }
+  .ai-result.show { display: block; }
+  .ai-result-label {
+    font-size: 10px; font-weight: 600; color: var(--purple);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;
+  }
+  .ai-result-section { margin-bottom: 12px; }
+  .ai-result-section:last-child { margin-bottom: 0; }
+  .ai-result-key { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .ai-result-val { color: var(--text2); font-size: 13px; line-height: 1.6; }
+
+  /* ── Divider ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+  /* ── Loading ── */
+  .dots-loader::after {
+    content: '';
+    animation: dots 1.2s steps(3,end) infinite;
+  }
+  @keyframes dots { 0%{content:'.'}33%{content:'..'}66%{content:'...'}100%{content:''} }
+
+  /* ── Alignment tree ── */
+  .align-tree { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 18px; margin-bottom: 18px; }
+  .tree-node {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: var(--radius);
+    font-size: 13px; margin-bottom: 6px; border: 1px solid var(--border);
+    background: var(--bg3);
+  }
+  .tree-node .node-icon { font-size: 14px; }
+  .tree-node .node-label { flex: 1; font-weight: 500; }
+  .tree-node .node-sub { font-size: 11px; color: var(--text3); }
+  .tree-connector { width: 2px; background: var(--border2); height: 12px; margin-left: 28px; }
+  .tree-level-1 { margin-left: 0; }
+  .tree-level-2 { margin-left: 28px; }
+  .tree-level-3 { margin-left: 56px; }
+
+  /* ── Rollup table ── */
+  .rollup-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .rollup-table th { text-align: left; font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 0.07em; text-transform: uppercase; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .rollup-table td { padding: 11px 12px; border-bottom: 1px solid var(--border); color: var(--text2); }
+  .rollup-table tr:last-child td { border-bottom: none; }
+  .rollup-table tbody tr:hover td { background: var(--bg3); }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .metric-row { grid-template-columns: 1fr 1fr; }
+    .metric-row-4 { grid-template-columns: 1fr 1fr; }
+    .team-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ──────────── SIDEBAR ──────────── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">B</div>
+      <div class="logo-text">
+        <div class="logo-title">BOT V2MOM</div>
+        <div class="logo-sub">AI-Native · FY2027</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav-section">
+    <div class="nav-group-label">My workspace</div>
+    <div class="nav-item active" data-panel="my-v2mom" onclick="nav(this)">
+      <span class="nav-icon">📋</span> My V2MOM
+    </div>
+    <div class="nav-item" data-panel="progress" onclick="nav(this)">
+      <span class="nav-icon">📈</span> Progress
+    </div>
+    <div class="nav-item" data-panel="obstacles" onclick="nav(this)">
+      <span class="nav-icon">🚧</span> Obstacles
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" data-panel="alignment" onclick="nav(this)">
+      <span class="nav-icon">🌲</span> Alignment tree
+    </div>
+
+    <div class="nav-group-label">Manager view</div>
+    <div class="nav-item" data-panel="team" onclick="nav(this)">
+      <span class="nav-icon">👥</span> Team health
+    </div>
+    <div class="nav-item" data-panel="rollup" onclick="nav(this)">
+      <span class="nav-icon">📊</span> Rollup dashboard
+    </div>
+    <div class="nav-item" data-panel="one-on-one" onclick="nav(this)">
+      <span class="nav-icon">🤝</span> 1:1 Prep AI
+    </div>
+
+    <div class="nav-group-label">AI tools</div>
+    <div class="nav-item" data-panel="co-writer" onclick="nav(this)">
+      <span class="nav-icon">✨</span> V2MOM co-writer
+    </div>
+    <div class="nav-item" data-panel="learning" onclick="nav(this)">
+      <span class="nav-icon">🎓</span> Learning recs
+    </div>
+
+    <div class="nav-group-label">HR &amp; Ops</div>
+    <div class="nav-item" data-panel="hr-ops" onclick="nav(this)">
+      <span class="nav-icon">⚙️</span> HR operations
+    </div>
+  </nav>
+
+  <div class="sidebar-user">
+    <div class="avatar">AR</div>
+    <div class="user-info">
+      <div class="name">Aarav Rao</div>
+      <div class="role">Sr. Consultant</div>
+    </div>
+    <span class="cycle-pill">Open</span>
+  </div>
+</aside>
+
+<!-- ──────────── MAIN ──────────── -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title" id="topbar-title">My V2MOM</div>
+      <div class="topbar-meta" id="topbar-meta">Last updated 3 days ago · FY2027 Q1</div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-sm" onclick="exportPDF()">Export PDF</button>
+      <button class="btn btn-primary btn-sm" onclick="nav(document.querySelector('[data-panel=co-writer]'))">✨ AI assist</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── MY V2MOM ── -->
+    <div class="panel active" id="panel-my-v2mom">
+      <div class="ai-banner">
+        <span class="ai-banner-icon">✨</span>
+        <span class="ai-banner-text">AI detected your <strong>Case study library</strong> method has been blocked for 18 days. Suggested reframing available — review with the co-writer.</span>
+        <button class="btn btn-sm" onclick="nav(document.querySelector('[data-panel=co-writer]'))">Review ↗</button>
+      </div>
+      <div class="sec-label">FY2027 V2MOM — Aarav Rao</div>
+      <div class="v2mom-card">
+        <div class="v2mom-row">
+          <div class="v2mom-key">Vision</div>
+          <div class="v2mom-val">
+            <textarea rows="2" spellcheck="false">Be the most trusted AI transformation advisor for mid-market financial services clients in APAC.</textarea>
+          </div>
+        </div>
+        <div class="v2mom-row">
+          <div class="v2mom-key">Values</div>
+          <div class="v2mom-val">
+            <textarea rows="2" spellcheck="false">Client impact first · Intellectual honesty · Continuous learning · Inclusive collaboration</textarea>
+          </div>
+        </div>
+        <div class="v2mom-row">
+          <div class="v2mom-key">Methods</div>
+          <div class="v2mom-val">
+            <div class="method-item"><span class="status-dot dot-g"></span>Deliver 3 AI readiness assessments for FS clients by Q2</div>
+            <div class="method-item"><span class="status-dot dot-a"></span>Complete L101 certification and apply to client engagements</div>
+            <div class="method-item"><span class="status-dot dot-r"></span>Build internal case study library from Q1 client delivery</div>
+            <div class="method-item"><span class="status-dot dot-g"></span>Present at 1 internal knowledge-share session per quarter</div>
+          </div>
+        </div>
+        <div class="v2mom-row">
+          <div class="v2mom-key">Obstacles</div>
+          <div class="v2mom-val">
+            <textarea rows="2" spellcheck="false">Limited access to client data environments slows assessment cycles. L101 scheduling conflicts with project delivery peaks.</textarea>
+          </div>
+        </div>
+        <div class="v2mom-row">
+          <div class="v2mom-key">Measures</div>
+          <div class="v2mom-val">
+            <textarea rows="2" spellcheck="false">3 FS client assessments delivered · L101 certified by Q2 · NPS ≥ 8.5 · 1 case study published Q1</textarea>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" onclick="nav(document.querySelector('[data-panel=co-writer]'))">✨ Improve with AI</button>
+        <button class="btn">Save draft</button>
+        <button class="btn" onclick="nav(document.querySelector('[data-panel=alignment]'))">🌲 View alignment tree</button>
+      </div>
+    </div>
+
+    <!-- ── PROGRESS ── -->
+    <div class="panel" id="panel-progress">
+      <div class="metric-row">
+        <div class="metric-card warn">
+          <div class="metric-label">Methods on track</div>
+          <div class="metric-value">2 / 4</div>
+          <div class="metric-sub">1 at-risk · 1 blocked</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Measures complete</div>
+          <div class="metric-value">25%</div>
+          <div class="metric-sub">1 of 4 measures hit</div>
+        </div>
+        <div class="metric-card warn">
+          <div class="metric-label">Last check-in</div>
+          <div class="metric-value">3d ago</div>
+          <div class="metric-sub">Recommended: weekly</div>
+        </div>
+      </div>
+      <div class="sec-label">Method progress</div>
+      <div class="prog-wrap">
+        <div class="prog-row">
+          <div class="prog-label">AI assessments (FS clients)</div>
+          <div class="prog-bar-bg"><div class="prog-bar" style="width:67%;background:var(--green)"></div></div>
+          <div class="prog-pct">67%</div>
+          <div class="prog-status"><span class="pill pill-g">On track</span></div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-label">L101 certification</div>
+          <div class="prog-bar-bg"><div class="prog-bar" style="width:40%;background:var(--amber)"></div></div>
+          <div class="prog-pct">40%</div>
+          <div class="prog-status"><span class="pill pill-a">At risk</span></div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-label">Case study library</div>
+          <div class="prog-bar-bg"><div class="prog-bar" style="width:10%;background:var(--red)"></div></div>
+          <div class="prog-pct">10%</div>
+          <div class="prog-status"><span class="pill pill-r">Blocked</span></div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-label">Knowledge share session</div>
+          <div class="prog-bar-bg"><div class="prog-bar" style="width:100%;background:var(--green)"></div></div>
+          <div class="prog-pct">100%</div>
+          <div class="prog-status"><span class="pill pill-g">Done ✓</span></div>
+        </div>
+      </div>
+      <div class="ai-nudge">⚡&nbsp; AI insight: Case study method is blocked for 18 days. Automatically flagged to your manager for 1:1 discussion. Add a blocker owner to unlock AI-suggested next steps.</div>
+      <div class="ai-nudge">⚡&nbsp; L101 certification is 40% complete but at risk of missing Q2 deadline. 3 sessions remain. AI recommends scheduling week of May 5.</div>
+    </div>
+
+    <!-- ── OBSTACLES ── -->
+    <div class="panel" id="panel-obstacles">
+      <div class="metric-row">
+        <div class="metric-card bad"><div class="metric-label">Active blockers</div><div class="metric-value">3</div><div class="metric-sub">2 external · 1 internal</div></div>
+        <div class="metric-card"><div class="metric-label">Avg age</div><div class="metric-value">11d</div><div class="metric-sub">oldest: 18 days</div></div>
+        <div class="metric-card"><div class="metric-label">Resolved this cycle</div><div class="metric-value">2</div><div class="metric-sub">last closed 7d ago</div></div>
+      </div>
+      <div class="sec-label">Active obstacles</div>
+      <div class="obstacle-item">
+        <div class="obs-top">
+          <span class="obs-title">Client data environment access</span>
+          <span class="pill pill-r">External</span>
+        </div>
+        <div class="obs-meta">Owner: Client IT · Opened 18d ago · Blocks: AI assessments method · Impact: High</div>
+      </div>
+      <div class="obstacle-item">
+        <div class="obs-top">
+          <span class="obs-title">L101 scheduling conflict with project peaks</span>
+          <span class="pill pill-a">Internal</span>
+        </div>
+        <div class="obs-meta">Owner: L&D team · Opened 9d ago · Blocks: L101 certification · Impact: Medium</div>
+      </div>
+      <div class="obstacle-item">
+        <div class="obs-top">
+          <span class="obs-title">No case study template available</span>
+          <span class="pill pill-a">Internal</span>
+        </div>
+        <div class="obs-meta">Owner: Knowledge team · Opened 5d ago · Blocks: Case study library · Impact: Medium</div>
+      </div>
+      <button class="btn" style="margin-top:6px;font-size:12px;">+ Log new obstacle</button>
+    </div>
+
+    <!-- ── ALIGNMENT TREE ── -->
+    <div class="panel" id="panel-alignment">
+      <div class="sec-label">Goal alignment cascade</div>
+      <div class="align-tree">
+        <div class="tree-node tree-level-1">
+          <span class="node-icon">🏢</span>
+          <div style="flex:1"><div class="node-label">BOT Consulting FY2027 Vision</div><div class="node-sub">Become the #1 AI transformation partner in APAC by revenue</div></div>
+          <span class="pill pill-b">Company</span>
+        </div>
+        <div class="tree-connector"></div>
+        <div class="tree-node tree-level-2">
+          <span class="node-icon">👔</span>
+          <div style="flex:1"><div class="node-label">Priya Singh · VP, FS Practice</div><div class="node-sub">Scale financial services AI practice to $12M ARR by Q4</div></div>
+          <span class="pill pill-t">Manager</span>
+        </div>
+        <div class="tree-connector" style="margin-left:56px"></div>
+        <div class="tree-node tree-level-3" style="border-color:rgba(79,140,255,0.3);background:rgba(79,140,255,0.06)">
+          <span class="node-icon">👤</span>
+          <div style="flex:1"><div class="node-label">Aarav Rao · Sr. Consultant</div><div class="node-sub">3 FS AI assessments · L101 certification · Case study library</div></div>
+          <span class="pill pill-b">You</span>
+        </div>
+      </div>
+      <div class="sec-label" style="margin-top:20px">How your methods connect upward</div>
+      <div class="v2mom-card">
+        <div class="v2mom-row">
+          <div class="v2mom-key" style="font-size:10px">Your method</div>
+          <div class="v2mom-val" style="font-weight:500">3 AI readiness assessments</div>
+          <div class="v2mom-val" style="color:var(--text3);border-left:1px solid var(--border)">→ Manager: Scale FS practice to $12M ARR</div>
+        </div>
+        <div class="v2mom-row">
+          <div class="v2mom-key" style="font-size:10px">Your method</div>
+          <div class="v2mom-val" style="font-weight:500">L101 certification</div>
+          <div class="v2mom-val" style="color:var(--text3);border-left:1px solid var(--border)">→ Company: AI capability building across consulting staff</div>
+        </div>
+        <div class="v2mom-row">
+          <div class="v2mom-key" style="font-size:10px">Your method</div>
+          <div class="v2mom-val" style="font-weight:500">Case study library</div>
+          <div class="v2mom-val" style="color:var(--text3);border-left:1px solid var(--border)">→ Manager: Build reusable IP for FS sales acceleration</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TEAM HEALTH ── -->
+    <div class="panel" id="panel-team">
+      <div class="metric-row metric-row-4">
+        <div class="metric-card good"><div class="metric-label">On track</div><div class="metric-value">4</div><div class="metric-sub">of 6 reportees</div></div>
+        <div class="metric-card warn"><div class="metric-label">At risk</div><div class="metric-value">1</div><div class="metric-sub">needs attention</div></div>
+        <div class="metric-card bad"><div class="metric-label">Blocked</div><div class="metric-value">1</div><div class="metric-sub">21d no check-in</div></div>
+        <div class="metric-card warn"><div class="metric-label">L101 enrolled</div><div class="metric-value">5/6</div><div class="metric-sub">1 manager not enrolled</div></div>
+      </div>
+      <div class="sec-label">Reportees</div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-card-top">
+            <div class="avatar" style="background:#1d9e75">PS</div>
+            <div style="flex:1"><div class="team-name">Priya Sharma</div><div class="team-role">Consultant</div></div>
+            <span class="pill pill-g">On track</span>
+          </div>
+          <div class="team-metrics">
+            <div class="team-metric"><strong>3/4</strong> methods</div>
+            <div class="team-metric"><strong>0</strong> blockers</div>
+            <div class="team-metric"><strong>2d</strong> check-in</div>
+          </div>
+        </div>
+        <div class="team-card" style="border-color:rgba(245,158,11,0.3)">
+          <div class="team-card-top">
+            <div class="avatar" style="background:#854f0b">MK</div>
+            <div style="flex:1"><div class="team-name">Mihail Kovac</div><div class="team-role">Sr. Analyst</div></div>
+            <span class="pill pill-a">At risk</span>
+          </div>
+          <div class="team-metrics">
+            <div class="team-metric"><strong>1/3</strong> methods</div>
+            <div class="team-metric"><strong>2</strong> blockers</div>
+            <div class="team-metric"><strong>16d</strong> check-in</div>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-card-top">
+            <div class="avatar" style="background:#0f6e56">LT</div>
+            <div style="flex:1"><div class="team-name">Layla Tran</div><div class="team-role">Analyst</div></div>
+            <span class="pill pill-g">On track</span>
+          </div>
+          <div class="team-metrics">
+            <div class="team-metric"><strong>4/4</strong> methods</div>
+            <div class="team-metric"><strong>0</strong> blockers</div>
+            <div class="team-metric"><strong>1d</strong> check-in</div>
+          </div>
+        </div>
+        <div class="team-card" style="border-color:rgba(239,68,68,0.3)">
+          <div class="team-card-top">
+            <div class="avatar" style="background:#a32d2d">RN</div>
+            <div style="flex:1"><div class="team-name">Rajan Nair</div><div class="team-role">Consultant</div></div>
+            <span class="pill pill-r">Blocked</span>
+          </div>
+          <div class="team-metrics">
+            <div class="team-metric"><strong>0/3</strong> methods</div>
+            <div class="team-metric"><strong>4</strong> blockers</div>
+            <div class="team-metric"><strong>21d</strong> check-in</div>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-card-top">
+            <div class="avatar" style="background:#3c3489">AK</div>
+            <div style="flex:1"><div class="team-name">Amara Kone</div><div class="team-role">Analyst</div></div>
+            <span class="pill pill-g">On track</span>
+          </div>
+          <div class="team-metrics">
+            <div class="team-metric"><strong>3/4</strong> methods</div>
+            <div class="team-metric"><strong>1</strong> blocker</div>
+            <div class="team-metric"><strong>4d</strong> check-in</div>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-card-top">
+            <div class="avatar" style="background:#185fa5">SL</div>
+            <div style="flex:1"><div class="team-name">Sam Liu</div><div class="team-role">Sr. Consultant</div></div>
+            <span class="pill pill-g">On track</span>
+          </div>
+          <div class="team-metrics">
+            <div class="team-metric"><strong>4/4</strong> methods</div>
+            <div class="team-metric"><strong>0</strong> blockers</div>
+            <div class="team-metric"><strong>1d</strong> check-in</div>
+          </div>
+        </div>
+      </div>
+      <div class="ai-risk">🔴&nbsp; <strong>AI retention risk signal:</strong> Rajan Nair — 21 days without check-in, 4 open blockers, all methods stalled. Sentiment trend in free-text check-ins declining over 4 weeks. Recommend HR review before cycle close.</div>
+      <div class="ai-nudge">⚡&nbsp; Mihail Kovac has not checked in for 16 days. AI coaching nudge sent. Recommended 1:1 agenda generated — see the 1:1 Prep AI tab.</div>
+    </div>
+
+    <!-- ── ROLLUP DASHBOARD ── -->
+    <div class="panel" id="panel-rollup">
+      <div class="metric-row">
+        <div class="metric-card"><div class="metric-label">Team milestone completion</div><div class="metric-value">61%</div><div class="metric-sub">avg across 6 reportees</div></div>
+        <div class="metric-card bad"><div class="metric-label">Open obstacles</div><div class="metric-value">9</div><div class="metric-sub">3 external · 6 internal</div></div>
+        <div class="metric-card good"><div class="metric-label">Avg NPS signal</div><div class="metric-value">7.8</div><div class="metric-sub">target ≥ 8.5</div></div>
+      </div>
+      <div class="sec-label">Aggregate measures by reportee</div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:18px;">
+        <table class="rollup-table">
+          <thead>
+            <tr>
+              <th>Employee</th><th>Methods complete</th><th>Obstacles</th><th>Last check-in</th><th>L101</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Priya Sharma</td><td>3 / 4</td><td>0</td><td>2d ago</td><td><span class="pill pill-g">Enrolled</span></td><td><span class="pill pill-g">On track</span></td></tr>
+            <tr><td>Mihail Kovac</td><td>1 / 3</td><td>2</td><td>16d ago</td><td><span class="pill pill-r">Not enrolled</span></td><td><span class="pill pill-a">At risk</span></td></tr>
+            <tr><td>Layla Tran</td><td>4 / 4</td><td>0</td><td>1d ago</td><td><span class="pill pill-g">Enrolled</span></td><td><span class="pill pill-g">On track</span></td></tr>
+            <tr><td>Rajan Nair</td><td>0 / 3</td><td>4</td><td>21d ago</td><td><span class="pill pill-g">Enrolled</span></td><td><span class="pill pill-r">Blocked</span></td></tr>
+            <tr><td>Amara Kone</td><td>3 / 4</td><td>1</td><td>4d ago</td><td><span class="pill pill-g">Enrolled</span></td><td><span class="pill pill-g">On track</span></td></tr>
+            <tr><td>Sam Liu</td><td>4 / 4</td><td>0</td><td>1d ago</td><td><span class="pill pill-g">Enrolled</span></td><td><span class="pill pill-g">On track</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn" style="font-size:12px">⬇ Export for Controller cadence</button>
+    </div>
+
+    <!-- ── 1:1 PREP AI ── -->
+    <div class="panel" id="panel-one-on-one">
+      <div class="ai-banner">
+        <span class="ai-banner-icon">🤝</span>
+        <span class="ai-banner-text">AI-generated agenda for <strong>Mihail Kovac</strong> · Next 1:1 in 2 days · Pulled from last check-in, open obstacles, milestone delta, and pulse sentiment.</span>
+        <button class="btn btn-sm">Regenerate</button>
+      </div>
+      <div class="sec-label">Suggested 1:1 agenda</div>
+      <div class="agenda-list">
+        <div class="agenda-item">
+          <div class="agenda-num">01</div>
+          <div class="agenda-text">
+            <strong>Data pipeline migration method</strong> — last milestone reported 16 days ago, now at risk. What's blocking progress, and what support is needed this week?
+            <span class="pill pill-a" style="margin-left:8px">At risk</span>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">02</div>
+          <div class="agenda-text">
+            <strong>2 open external blockers</strong> — review owner assignments and escalation path. Client IT dependency on data access needs a decision within this sprint.
+          </div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">03</div>
+          <div class="agenda-text">
+            <strong>L101 enrollment</strong> — Mihail is the only team member not yet enrolled. Confirm whether scheduling is the barrier and identify a window in the next 2 weeks.
+            <span class="pill pill-b" style="margin-left:8px">L&amp;D</span>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">04</div>
+          <div class="agenda-text">
+            <strong>Career development</strong> — V2MOM shows interest in client-facing delivery leadership. Walk through published promotion criteria for Senior Consultant → Manager path.
+            <span class="pill pill-t" style="margin-left:8px">Growth</span>
+          </div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">05</div>
+          <div class="agenda-text">
+            <strong>Pulse check</strong> — free-text check-in sentiment has trended downward over 4 weeks. Ask an open question about workload, support, and what would make the next month better.
+            <span class="pill pill-p" style="margin-left:8px">AI signal</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" style="font-size:12px">Save to calendar</button>
+        <button class="btn" style="font-size:12px">Export PDF</button>
+      </div>
+    </div>
+
+    <!-- ── V2MOM CO-WRITER ── -->
+    <div class="panel" id="panel-co-writer">
+      <div class="sec-label">V2MOM co-writer · Powered by Claude</div>
+      <div class="composer">
+        <div class="composer-head">
+          <span>✨</span>
+          Describe your goals in plain language — AI will structure them into proper V2MOM format and check alignment with company vision
+        </div>
+        <div class="composer-body">
+          <textarea class="composer-input" id="cowriter-input" rows="5"
+            placeholder="e.g. I want to become the go-to AI advisor for financial services clients in APAC. I plan to deliver 3 client assessments, get L101 certified, and help build a case study library. My main blockers are client data access issues and scheduling conflicts with L&D…"></textarea>
+          <div class="composer-footer">
+            <div class="spinner-text" id="cw-spinner">✨ Structuring your V2MOM<span class="dots-loader"></span></div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn" onclick="clearCW()">Clear</button>
+              <button class="btn btn-primary" onclick="runCW()">✨ Generate V2MOM</button>
+            </div>
+          </div>
+          <div class="ai-result" id="cw-result">
+            <div class="ai-result-label">✨ AI-structured V2MOM</div>
+            <div id="cw-result-body"></div>
+            <hr class="divider">
+            <div style="display:flex;gap:8px;margin-top:4px;">
+              <button class="btn btn-primary" style="font-size:12px" onclick="nav(document.querySelector('[data-panel=my-v2mom]'))">Apply to my V2MOM</button>
+              <button class="btn" style="font-size:12px" onclick="document.getElementById('cw-result').classList.remove('show')">Discard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ai-nudge">💡 Tip: The more specific you are about your goals and current blockers, the better the AI can align your V2MOM to BOT's FY2027 company vision.</div>
+    </div>
+
+    <!-- ── LEARNING RECS ── -->
+    <div class="panel" id="panel-learning">
+      <div class="ai-banner">
+        <span class="ai-banner-icon">🎓</span>
+        <span class="ai-banner-text">AI analysed gaps in your Methods and Obstacles and surfaced 4 relevant learning opportunities from BOT's L&D programs.</span>
+      </div>
+      <div class="metric-row">
+        <div class="metric-card"><div class="metric-label">Recommended for you</div><div class="metric-value">4</div><div class="metric-sub">based on your V2MOM gaps</div></div>
+        <div class="metric-card warn"><div class="metric-label">L101 progress</div><div class="metric-value">40%</div><div class="metric-sub">3 sessions remaining</div></div>
+        <div class="metric-card good"><div class="metric-label">Toastmasters</div><div class="metric-value">Enrolled</div><div class="metric-sub">next session May 7</div></div>
+      </div>
+      <div class="sec-label">AI recommendations</div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+        <table class="rollup-table">
+          <thead><tr><th>Program</th><th>Gap addressed</th><th>Format</th><th>Priority</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><strong>L101 Module 4: Client engagement</strong></td><td>AI assessment delivery skills</td><td>Online · 2hr</td><td><span class="pill pill-r">High</span></td><td><button class="btn btn-sm" style="font-size:11px">Enrol now</button></td></tr>
+            <tr><td><strong>Toastmasters: Storytelling track</strong></td><td>Knowledge-share presentations</td><td>In-person · weekly</td><td><span class="pill pill-a">Medium</span></td><td><button class="btn btn-sm" style="font-size:11px">Schedule</button></td></tr>
+            <tr><td><strong>Internal: FS case study writing</strong></td><td>Case study library blocker</td><td>Self-paced · 1hr</td><td><span class="pill pill-a">Medium</span></td><td><button class="btn btn-sm" style="font-size:11px">Start</button></td></tr>
+            <tr><td><strong>Stakeholder management workshop</strong></td><td>Client data access obstacle</td><td>Half-day · May 15</td><td><span class="pill pill-b">Low</span></td><td><button class="btn btn-sm" style="font-size:11px">Register</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── HR OPS ── -->
+    <div class="panel" id="panel-hr-ops">
+      <div class="metric-row metric-row-4">
+        <div class="metric-card"><div class="metric-label">L101 enrolled</div><div class="metric-value">5/6</div><div class="metric-sub">team members</div></div>
+        <div class="metric-card good"><div class="metric-label">D&amp;I target Q1</div><div class="metric-value">On track</div><div class="metric-sub">quarterly review due May 1</div></div>
+        <div class="metric-card"><div class="metric-label">Comp bands published</div><div class="metric-value">100%</div><div class="metric-sub">visible to all employees</div></div>
+        <div class="metric-card warn"><div class="metric-label">Cycle closes</div><div class="metric-value">14d</div><div class="metric-sub">May 7 deadline</div></div>
+      </div>
+      <div class="sec-label">Program enrollment status</div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:18px;">
+        <table class="rollup-table">
+          <thead><tr><th>Employee</th><th>L101</th><th>Toastmasters</th><th>Comp band visible</th><th>V2MOM submitted</th></tr></thead>
+          <tbody>
+            <tr><td>Priya Sharma</td><td><span class="pill pill-g">Enrolled</span></td><td><span class="pill pill-g">Active</span></td><td><span class="pill pill-g">Yes</span></td><td><span class="pill pill-g">Submitted</span></td></tr>
+            <tr><td>Mihail Kovac</td><td><span class="pill pill-r">Not enrolled ⚠</span></td><td><span class="pill pill-a">Not started</span></td><td><span class="pill pill-g">Yes</span></td><td><span class="pill pill-a">Draft</span></td></tr>
+            <tr><td>Layla Tran</td><td><span class="pill pill-g">Enrolled</span></td><td><span class="pill pill-g">Active</span></td><td><span class="pill pill-g">Yes</span></td><td><span class="pill pill-g">Submitted</span></td></tr>
+            <tr><td>Rajan Nair</td><td><span class="pill pill-g">Enrolled</span></td><td><span class="pill pill-a">Not started</span></td><td><span class="pill pill-g">Yes</span></td><td><span class="pill pill-r">Not started</span></td></tr>
+            <tr><td>Amara Kone</td><td><span class="pill pill-g">Enrolled</span></td><td><span class="pill pill-g">Active</span></td><td><span class="pill pill-g">Yes</span></td><td><span class="pill pill-g">Submitted</span></td></tr>
+            <tr><td>Sam Liu</td><td><span class="pill pill-g">Enrolled</span></td><td><span class="pill pill-g">Active</span></td><td><span class="pill pill-g">Yes</span></td><td><span class="pill pill-g">Submitted</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ai-risk">⚠️&nbsp; Mihail Kovac is not enrolled in L101 and the cycle closes in 14 days. Manager notification sent. HR flagged for follow-up.</div>
+      <div style="display:flex;gap:8px;margin-top:6px;">
+        <button class="btn" style="font-size:12px">⬇ Export for Controller cadence</button>
+        <button class="btn" style="font-size:12px">⬇ Export D&amp;I report</button>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+const pageMeta = {
+  'my-v2mom':   ['My V2MOM',            'Last updated 3 days ago · FY2027 Q1'],
+  'progress':   ['Progress tracker',    'Q1 2027 · 4 methods tracked'],
+  'obstacles':  ['Obstacle log',        '3 active blockers · Q1 2027'],
+  'alignment':  ['Alignment tree',      'Company → Manager → You'],
+  'team':       ['Team health',         'Manager view · 6 reportees'],
+  'rollup':     ['Rollup dashboard',    'Aggregate team measures · Q1 2027'],
+  'one-on-one': ['1:1 Prep AI',         'Mihail Kovac · Next 1:1 in 2 days'],
+  'co-writer':  ['V2MOM co-writer',     'AI-native · Powered by Claude'],
+  'learning':   ['Learning recommendations', 'AI-suggested based on your V2MOM gaps'],
+  'hr-ops':     ['HR operations',       'L&D enrollment · D&I · Cycle management'],
+};
+
+function nav(el) {
+  const id = el.dataset.panel;
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  el.classList.add('active');
+  const [title, meta] = pageMeta[id] || ['', ''];
+  document.getElementById('topbar-title').textContent = title;
+  document.getElementById('topbar-meta').textContent  = meta;
+}
+
+async function runCW() {
+  const input = document.getElementById('cowriter-input').value.trim();
+  if (!input) return;
+  const spinner = document.getElementById('cw-spinner');
+  const resultBox = document.getElementById('cw-result');
+  const resultBody = document.getElementById('cw-result-body');
+  spinner.classList.add('show');
+  resultBox.classList.remove('show');
+  resultBody.innerHTML = '';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are an AI V2MOM co-writer for BOT Consulting, an AI-native consulting firm. Structure the user's plain-language goals into a professional V2MOM. Return ONLY valid JSON, no markdown fences, no extra text. Schema:
+{"vision":"string","values":["string"],"methods":["string"],"obstacles":["string"],"measures":["string"]}
+Keep each value concise and action-oriented. Align methods to measurable outcomes. Obstacles should be specific and ownable.`,
+        messages: [{ role: 'user', content: input }]
+      })
+    });
+    const data = await res.json();
+    const text = (data.content || []).find(c => c.type === 'text')?.text || '';
+    let parsed;
+    try { parsed = JSON.parse(text.replace(/```json|```/g, '').trim()); } catch { parsed = null; }
+
+    if (parsed) {
+      const section = (key, label, items) => `
+        <div class="ai-result-section">
+          <div class="ai-result-key">${label}</div>
+          <div class="ai-result-val">${Array.isArray(items) ? items.map(i => '• ' + i).join('<br>') : items}</div>
+        </div>`;
+      resultBody.innerHTML =
+        section('vision',    'Vision',    parsed.vision) +
+        section('values',    'Values',    parsed.values) +
+        section('methods',   'Methods',   parsed.methods) +
+        section('obstacles', 'Obstacles', parsed.obstacles) +
+        section('measures',  'Measures',  parsed.measures);
+    } else {
+      resultBody.innerHTML = `<div class="ai-result-val" style="white-space:pre-wrap">${text}</div>`;
+    }
+    resultBox.classList.add('show');
+  } catch (e) {
+    resultBody.innerHTML = '<div style="color:var(--red);font-size:12px">Error contacting AI. Check your connection and try again.</div>';
+    resultBox.classList.add('show');
+  }
+  spinner.classList.remove('show');
+}
+
+function clearCW() {
+  document.getElementById('cowriter-input').value = '';
+  document.getElementById('cw-result').classList.remove('show');
+  document.getElementById('cw-result-body').innerHTML = '';
+}
+
+function exportPDF() {
+  window.print();
+}
+</script>
+</body>
+</html>
